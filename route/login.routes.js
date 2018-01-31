@@ -1,5 +1,6 @@
 const express = require('express')
 const mongoose = require('mongoose')
+const cors = require('cors')
 const Auth = require('../models/AuthDB')
 const passport = require('passport')
 const jwt = require('jsonwebtoken'); 
@@ -13,55 +14,55 @@ var Username
 var Pass
 var token
 
-app.post('/', function(req, res,next) {
+app.post('/',cors(), function(req, res,next) {
             
-
-              console.log(req.body)
-              res.json({
-                success: true
-              })
-              // console.log(req.body.Username)
-              // console.log(req.body.Pass)
-              // Auth.findOne({ 
-              //   Username: req.body.Username
-              // }, function(err, user) {
+              // console.log("pass")
+              // console.log(req.body)
+              // res.json({
+              //   success: true
+              // })
+              console.log(req.body.Username)
+              console.log(req.body.Pass)
+              Auth.findOne({ 
+                Username: req.body.Username
+              }, function(err, user) {
                   
-              //   if (err) {throw err;
-              //   console.log("fail")
-              //   }
-              //   if (!user) {
-              //     res.json({ success: false, message: 'Authentication failed. Email not found.' });
-              //     console.log("fail")
-              //   } else if (user) {
+                if (err) {throw err;
+                console.log("fail")
+                }
+                if (!user) {
+                  res.json({ success: false, message: 'Authentication failed. Email not found.' });
+                  console.log("fail")
+                } else if (user) {
 
                   
-              //     if (user.Pass != req.body.Pass) {
-              //       res.json({ success: false, message: 'Authentication failed. Wrong password.' });
-              //       console.log("fail")
-              //       }else{
+                  if (user.Pass != req.body.Pass) {
+                    res.json({ success: false, message: 'Authentication failed. Wrong password.' });
+                    console.log("fail")
+                    }else{
                             
-              //               var profile = {
-              //                   email: user.Username,
-              //                   Pass: user.Pass
-              //                       };
-              //               var token = jwt.sign(profile, secret,{
-              //                   expiresIn: '50m' // exp in 5 min
-              //                   });
+                            var profile = {
+                                email: user.Username,
+                                Pass: user.Pass
+                                    };
+                            var token = jwt.sign(profile, secret,{
+                                expiresIn: '50m' // exp in 5 min
+                                });
 
-              //                 res.json({
-              //                     success: true,
-              //                     message: 'Enjoy your token!',
-              //                     token: token
+                              res.json({
+                                  success: true,
+                                  message: 'Enjoy your token!',
+                                  token: token
                                   
-              //                   });
-              //                   console.log(token)
+                                });
+                                console.log(token)
                                 
 
-              //               }
-              //               // console.log("pass")
-              //           }
+                            }
+                            // console.log("pass")
+                        }
                         
-              //       })
+                    })
                       
     })
 
@@ -72,14 +73,5 @@ app.post('/', function(req, res,next) {
     //     })
     // })
 
-    app.get('/',function(req,res){
-
-      console.log("name :")
-      console.log(req.body)
-      res.send({
-        name:"pong"
-      })
-    })
-
-
+    
 module.exports = app
